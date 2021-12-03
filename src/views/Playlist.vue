@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <router-view />
+  <div id="playlist">
+    <h1>Playlist</h1>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style>
-#app {
+#playlist {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
