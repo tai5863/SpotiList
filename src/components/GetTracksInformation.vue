@@ -1,7 +1,7 @@
 <template>
-  <div id="main">
+  <div id="get_tracks_information">
     <div class="button_container">
-      <button @click="init" class="operator" v-if="rendered" id="operator_init">
+      <button @click="init" class="operator" id="operator_init">
         曲の詳細、類似度を可視化します
       </button>
     </div>
@@ -10,22 +10,16 @@
 
 <script>
 export default {
-  name: "Main",
-  components: {
-  },
+  name: "GetTracksInformation",
   props: {
-    rendered: Boolean,
     routeParams: Object,
   },
-  data: function () {
-    return {
-    };
-  },
   methods: {
-    init: function () {
-      this.getUsersID();
+    init() {
+      // this.getUsersID();
+      console.log(this.routeParams); 
     },
-    getUsersID: function () {
+    async getUsersID() {
       const axios = require("axios");
       let endpoint = "https://api.spotify.com/v1/me/";
       let data = {
@@ -37,15 +31,15 @@ export default {
       };
 
       axios
-        .get(endpoint, data)
-        .then((res) => {
-          this.userID = res.data.id;
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("エラーが発生しました");
-          window.location.href = "";
-        });
+      .get(endpoint, data)
+      .then((res) => {
+        this.userID = res.data.id;
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("エラーが発生しました");
+        window.location.href = "";
+      });
     },
   },
 };
