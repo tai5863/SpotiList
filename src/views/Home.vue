@@ -9,21 +9,21 @@
 </template>
 
 <script>
-import Login from "@/components/Login.vue"
+import Login from "@/components/Login.vue";
 
 export default {
   name: "App",
   components: {
-    Login
+    Login,
   },
   data: function () {
     return {
-      redirectURI: 'http://localhost:8080/SpotiList/visualize', // 開発用
+      redirectURI: "http://localhost:8080/SpotiList/visualize", // 開発用
       // redirectURI: 'https://tai5863.github.io/SpotiList/', // 本番用
-      authorized: false
-    }
-  }
-}
+      authorized: false,
+    };
+  },
+};
 </script>
 
 <style>
