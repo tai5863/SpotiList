@@ -1,20 +1,19 @@
 <template>
   <div id="home">
-    <h1>Spotilist</h1>
-    <p>
-      SpotiListは、Spotifyのお気に入りの曲を分析し、類似した曲のプレイリストを作成するアプリです。
-    </p>
+    <Title></Title>
     <Login v-if="!authorized" :redirectURI="redirectURI"></Login>
   </div>
 </template>
 
 <script>
 import Login from "@/components/Login.vue";
+import Title from "@/components/Title.vue";
 
 export default {
   name: "Home",
   components: {
     Login,
+    Title,
   },
   data: function () {
     return {
@@ -26,31 +25,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #home {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-h1 {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #ffffff;
-  margin-top: 60px;
-  font-size: 80px;
-}
-p {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #ffffff;
-  margin-top: 60px;
-  font-size: 20px;
 }
 </style>
