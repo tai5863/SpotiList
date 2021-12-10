@@ -15,7 +15,7 @@ export default {
     redirectURI: String,
   },
   methods: {
-    login: function () {
+    login() {
       const endpoint = "https://accounts.spotify.com/authorize";
       const response_type = "token";
       const client_id = "74bf37f991444e03b6a910d9078615b6";
@@ -31,7 +31,7 @@ export default {
         "&scope=" +
         scope;
     },
-  },
+  }
 };
 </script>
 

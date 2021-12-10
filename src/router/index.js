@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Visualize from '../views/Visualize.vue'
-import Playlist from '../views/Playlist.vue'
+import Home from '@/views/Home.vue'
+import Visualize from '@/views/Visualize.vue'
+import Playlist from '@/views/Playlist.vue'
 
 Vue.use(VueRouter)
 
@@ -11,14 +11,14 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home,
-    props: (route) => {
-      return { routeParams: route.query }
-    }
   },
   {
     path: '/visualize',
     name: 'Visualize',
-    component: Visualize
+    component: Visualize,
+    props: (route) => {
+      return { routeParams: route.query }
+    }
   },
   {
     path: '/playlist',

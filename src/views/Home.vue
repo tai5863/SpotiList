@@ -16,7 +16,7 @@ export default {
   components: {
     Login,
   },
-  data: function () {
+  data() {
     return {
       redirectURI: "http://localhost:8080/SpotiList/visualize", // 開発用
       // redirectURI: 'https://tai5863.github.io/SpotiList/', // 本番用
@@ -26,7 +26,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #home {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
