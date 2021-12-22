@@ -27,7 +27,7 @@ export default {
 
 <style scoped>
 #home {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Abel', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
