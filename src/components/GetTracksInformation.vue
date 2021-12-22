@@ -18,10 +18,11 @@ export default {
     return {
       userId: "",
       axios: require("axios"),
-      limit: 50,
+      favoriteTracksLimit: 50,
+      featuresLimit: 100,
       total: 0,
-      offset: 0,
       favorites: [],
+      audioFeatures: []
     };
   },
   computed: {
@@ -40,20 +41,22 @@ export default {
       await this.getUserId();
       await this.getTotalNumber();
       await this.getTracks();
+      await this.getAudioFeatures();
       console.log("finished");
     },
     getUserId() {
       return new Promise((resolve, reject) => {
-        let endpoint = "https://api.spotify.com/v1/me/";
+        let endpoint_user_id = "https://api.spotify.com/v1/me/";
 
         this.axios
-          .get(endpoint, this.data)
+          .get(endpoint_user_id, this.data)
           .then((res) => {
             this.userId = res.data.id;
             console.log("get userId");
             resolve("get userId");
           })
           .catch((err) => {
+            console.error(err + ": get userId");
             alert("エラーが発生しました");
             window.location.href = "";
             reject(err);
@@ -62,19 +65,20 @@ export default {
     },
     getTotalNumber() {
       return new Promise((resolve, reject) => {
-        let endpoint_first =
+        let endpoint_total_num =
           "https://api.spotify.com/v1/me/tracks?limit=" +
-          String(this.limit) +
+          String(this.favoriteTracksLimit) +
           "&market=JP";
         this.axios
-          .get(endpoint_first, this.data)
-          .then((res_first) => {
-            this.favorites = res_first.data.items;
-            this.total = res_first.data.total;
+          .get(endpoint_total_num, this.data)
+          .then((res) => {
+            this.favorites = res.data.items;
+            this.total = res.data.total;
             console.log('total: ' + String(this.total));
-            resolve("get favorites");
+            resolve("get total number");
           })
           .catch((err) => {
+            console.error(err + ": get total number");
             alert("エラーが発生しました");
             window.location.href = "";
             reject(err);
@@ -83,38 +87,89 @@ export default {
     },
     getTracks() {
       return new Promise((resolve, reject) => {
-        if (this.total > this.limit) {
+
+        let offset = 0;
+
+        if (this.total > this.favoriteTracksLimit) {
           let promises = [];
-          let loop_num = Math.floor(this.total / this.limit);
+          let loop_num = Math.floor(this.total / this.favoriteTracksLimit);
 
           for (let i = 0; i < loop_num; i++) {
-            this.offset += this.limit;
-            let endpoint_next =
+            offset += this.favoriteTracksLimit;
+            let endpoint_tracks =
               "https://api.spotify.com/v1/me/tracks?offset=" +
-              String(this.offset) +
+              String(offset) +
               "&limit=50&market=JP";
-            promises.push(this.axios.get(endpoint_next, this.data));
+            promises.push(this.axios.get(endpoint_tracks, this.data));
           }
 
           this.axios
             .all(promises)
-            .then((res_next) => {
-              res_next.forEach((element) => {
+            .then((res) => {
+              res.forEach((element) => {
                 this.favorites = this.favorites.concat(element.data.items);
               });
-              console.log(this.favorites);
+              this.$emit('get_favorites', this.favorites);
+              console.log("get tracks");
               resolve("get tracks");
             })
             .catch((err) => {
-              console.error(err);
+              console.error(err + ": get tracks");
               alert("エラーが発生しました");
               window.location.href = "";
               reject(err);
             });
         } 
       });
-    }
+    },
+    getAudioFeatures() {
+      return new Promise((resolve, reject) => {
+      // return new Promise(() => {
+
+        // eslint-disable-next-line no-unused-vars
+        let offset = 0;
+        let splitFavorites = [];
+
+        if (this.total > this.featuresLimit) {
+          let promises = [];
+          let loop_num = Math.floor(this.total / this.featuresLimit);
+
+          for (let i = 0; i < loop_num; i++) {
+            offset += this.featuresLimit;
+            splitFavorites = sliceByNumber(this.favorites, this.featuresLimit);
+            let endpoint_features =
+              "https://api.spotify.com/v1/audio-features?ids=" +
+              splitFavorites[i].map((item) => item.track.id);
+            promises.push(this.axios.get(endpoint_features, this.data));
+          }
+
+          this.axios
+            .all(promises)
+            .then((res) => {
+              res.forEach((element) => {
+                this.audioFeatures = this.audioFeatures.concat(element.data.audio_features);
+              });
+              this.$emit('get_audio_features', this.audioFeatures);
+              console.log("get audio features");
+              resolve("get audio features");
+            })
+            .catch((err) => {
+              console.error(err + ": audio features");
+              alert("エラーが発生しました");
+              window.location.href = "";
+              reject(err);
+            });
+        }
+      });
+    },
   },
+};
+
+const sliceByNumber = (array, number) => {
+  const length = Math.ceil(array.length / number)
+  return new Array(length).fill().map((_, i) =>
+    array.slice(i * number, (i + 1) * number)
+  );
 };
 </script>
 
