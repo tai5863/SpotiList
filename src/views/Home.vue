@@ -1,16 +1,19 @@
 <template>
   <div id="home">
+    <Title></Title>
     <Login v-if="!authorized" :redirectURI="redirectURI"></Login>
   </div>
 </template>
 
 <script>
 import Login from "@/components/Login.vue";
+import Title from "@/components/Title.vue";
 
 export default {
   name: "Home",
   components: {
     Login,
+    Title,
   },
   data() {
     return {
