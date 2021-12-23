@@ -1,50 +1,77 @@
 <template>
   <div id="visualize">
-    <GetTracksInformation v-if="!needVisualize" :routeParams="routeParams" @get_audio_features="visualize" @get_favorites="setFavorites"></GetTracksInformation>
-    <div id="song_container" v-if="needVisualize">
-      <img :src="this.song.thumbnailUrl" alt="image" width="300" height="300"> 
-      <div id="audio_features">
-        <div class="title">
-          <p class="song_name">{{ song.name }}</p>
-          <p class="artist">{{ song.artist }}</p>
-        </div>
-        <visualize-individual :paramName="'Acousticness'" :value="song.acousticness" :min="0" :max="1" />
-        <visualize-individual :paramName="'Danceability'" :value="song.danceability" :min="0" :max="1" />
-        <visualize-individual :paramName="'Enegy'" :value="song.energy" :min="0" :max="1" />
-        <visualize-individual :paramName="'Instrumentalness'" :value="song.instrumentalness" :min="0" :max="1" />
-        <visualize-individual :paramName="'Liveness'" :value="song.liveness" :min="0" :max="1" />
-        <visualize-individual :paramName="'Loudness'" :value="song.loudness" :min="-60" :max="0" />
-        <visualize-individual :paramName="'Speechiness'" :value="song.speechiness" :min="0" :max="1" />
-        <visualize-individual :paramName="'Valence'" :value="song.valence" :min="0" :max="1" />
-        <!-- <p class="param">duration_ms: {{ song.duration_ms }}</p> -->
-        <!-- <p class="param">key: {{ song.key }}</p> -->
-        <!-- <p class="param">mode: {{ song.mode }}</p> -->
-        <!-- <p class="param">tempo: {{ song.tempo }}</p> -->
-        <!-- <p class="param">time_signature: {{ song.time_signature }}</p> -->
-      </div>
+    <GetTracksInformation v-if="!isExistingAudioFeatures" :routeParams="routeParams" @get_audio_features="visualize" @get_favorites="setFavorites"></GetTracksInformation>
+    <div id="songs_container" v-show="isVisualizing">
+      <song :song="song1"/>
+      <song :song="song2"/>
+      <song :song="song3"/>
     </div>
+    <button v-on:click="visualizeSample">CSS3D</button>
   </div>
 </template>
 
 <script>
+import * as THREE from 'three';
+import {
+  CSS3DRenderer,
+  CSS3DObject
+} from 'three-css3drenderer';
+
 import GetTracksInformation from '@/components/GetTracksInformation.vue'
-import VisualizeIndividual from '@/components/VisualizeIndividual.vue'
+import Song from '@/components/Song.vue'
 
 export default {
   name: 'Visualize',
   components: {
     GetTracksInformation,
-    VisualizeIndividual
+    Song
   },
   props: {
     routeParams: Object
   },
   data() {
     return {
-      needVisualize: false,
+      isExistingAudioFeatures: false,
+      isVisualizing: false,
       favorites: [],
       audioFeatures: [],
-      song: {
+      song1: {
+        thumbnailUrl: "",
+        name: "",
+        artist: "",
+        acousticness: 0,
+        danceability: 0,
+        duration_ms: 0,
+        energy: 0,
+        instrumentalness: 0,
+        key: 0,
+        liveness: 0,
+        loudness: 0,
+        mode: 0,
+        speechiness: 0,
+        tempo: 0,
+        time_signature: 0,
+        valence: 0
+      },
+      song2: {
+        thumbnailUrl: "",
+        name: "",
+        artist: "",
+        acousticness: 0,
+        danceability: 0,
+        duration_ms: 0,
+        energy: 0,
+        instrumentalness: 0,
+        key: 0,
+        liveness: 0,
+        loudness: 0,
+        mode: 0,
+        speechiness: 0,
+        tempo: 0,
+        time_signature: 0,
+        valence: 0
+      },
+      song3: {
         thumbnailUrl: "",
         name: "",
         artist: "",
@@ -70,75 +97,104 @@ export default {
       this.authorized = true;
     }
   },
+  mounted() {
+    // this.visualizeSample();
+  },
   methods: {
+    visualizeSample() {
+      this.isVisualizing = true;
+
+      let camera, scene, renderer, objects;
+      let fov = 240;
+
+      let width = window.innerWidth, height = window.innerHeight;
+
+      let wrapper = document.getElementById("songs_container");
+      let items = document.getElementsByClassName("song");
+
+      init();
+      animate();
+
+      function init() {
+        camera = new THREE.PerspectiveCamera(fov, width / height, 1, 1000);
+        scene = new THREE.Scene();
+
+        objects = new THREE.Group();
+
+        for (let i = 0; i < items.length; i++) {
+          let object = new CSS3DObject(items[i]);
+          object.position.x = Math.cos((i + 1) / items.length * 2 * Math.PI) * 400 + width / 2;
+          object.position.y = Math.sin((i + 1) / items.length * 2 * Math.PI) * 400 + height / 2;
+          object.position.z = Math.random() * -500;
+          objects.add(object);
+        }
+
+        scene.add(objects);
+
+        renderer = new CSS3DRenderer();
+        renderer.setSize(width, height);  
+        renderer.domElement.firstChild.style.perspective = 600 + 'px';
+
+        // delete children
+        while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild);
+        wrapper.appendChild(renderer.domElement);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+    },
     setFavorites(favorites) {
       this.favorites = favorites;
-      this.song.name = this.favorites[0].track.name;
-      this.song.artist = this.favorites[0].track.artists[0].name;
-      this.song.thumbnailUrl = this.favorites[0].track.album.images[0].url;
     },
     visualize(audioFeatures) {
       this.audioFeatures = audioFeatures;
-      this.song.acousticness = this.audioFeatures[0].acousticness;
-      this.song.danceability = this.audioFeatures[0].danceability;
-      this.song.acousticness = this.audioFeatures[0].acousticness;
-      this.song.duration_ms = this.audioFeatures[0].duration_ms;
-      this.song.energy = this.audioFeatures[0].energy;
-      this.song.instrumentalness = this.audioFeatures[0].instrumentalness;
-      this.song.key = this.audioFeatures[0].key;
-      this.song.liveness = this.audioFeatures[0].liveness;
-      this.song.loudness = this.audioFeatures[0].loudness;
-      this.song.mode = this.audioFeatures[0].mode;
-      this.song.speechiness = this.audioFeatures[0].speechiness;
-      this.song.tempo = this.audioFeatures[0].tempo;
-      this.song.time_signature = this.audioFeatures[0].time_signature;
-      this.song.valence = this.audioFeatures[0].valence;
 
-      this.needVisualize = true;
+      setSongInformation(this.song1, this.favorites, this.audioFeatures, 0);
+      setSongInformation(this.song2, this.favorites, this.audioFeatures, 1);
+      setSongInformation(this.song3, this.favorites, this.audioFeatures, 2);
+
+      this.isExistingAudioFeatures = true;
     }
   }
 }
+
+function setSongInformation(songObject, favorites, audioFeatures, index) {
+  songObject.name = favorites[index].track.name;
+  songObject.artist = favorites[index].track.artists[0].name;
+  songObject.thumbnailUrl = favorites[index].track.album.images[0].url;
+
+  songObject.acousticness = audioFeatures[index].acousticness;
+  songObject.danceability = audioFeatures[index].danceability;
+  songObject.duration_ms = audioFeatures[index].duration_ms;
+  songObject.energy = audioFeatures[index].energy;
+  songObject.instrumentalness = audioFeatures[index].instrumentalness;
+  songObject.key = audioFeatures[index].key;
+  songObject.liveness = audioFeatures[index].liveness;
+  songObject.loudness = audioFeatures[index].loudness;
+  songObject.mode = audioFeatures[index].mode;
+  songObject.speechiness = audioFeatures[index].speechiness;
+  songObject.tempo = audioFeatures[index].tempo;
+  songObject.time_signature = audioFeatures[index].time_signature;
+  songObject.valence = audioFeatures[index].valence;
+}
+
 </script>
 
 <style scoped>
-#visualize {
-  font-family: 'Abel', sans-serif;
-  font-size: 1.3rem;
+@import "../assets/css/styles.css";
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+#visualize {
+  font-size: 1.3rem;
   text-align: left;
   color: #ffffff;
 }
-#song_container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#audio_features {
-  display: inline-block;
-  margin: 0 2rem;
-}
-img {
-  width: 250px;
-  height: 250px;
-}
-.title {
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-  justify-content: left;
-}
-.song_name {
-  font-size: 1.8rem;
-}
-.artist {
-  margin: 0 1rem;
-  font-size: 1.5rem;
-  opacity: 0.5;
-}
-.param {
-  margin: 0;
+#songs_container {
+  overflow: hidden;
 }
 </style>

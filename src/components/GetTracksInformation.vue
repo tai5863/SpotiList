@@ -58,6 +58,7 @@ export default {
           .catch((err) => {
             console.error(err + ": get userId");
             alert("エラーが発生しました");
+            // window.location.href = "http://localhost:8080/SpotiList";
             window.location.href = "";
             reject(err);
           });

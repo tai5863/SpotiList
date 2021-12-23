@@ -1,5 +1,5 @@
 <template>
-  <div class="visualize_individual">
+  <div class="parameter">
     <p class="param_name">{{ paramName }}</p>
     <div class="bar_container">
       <div class="bar part" :id="'bar_' + paramName" :style="barWidth"></div>
@@ -11,9 +11,8 @@
 
 <script>
 export default {
-  name: 'VisualizeIndividual',
+  name: 'Parameter',
   props: {
-    routeParams: Object,
     paramName: String,
     value: Number,
     min: Number,
@@ -22,12 +21,6 @@ export default {
   data() {
     return {
       bar: null
-    }
-  },
-  created() {
-    if (this.$route.hash) {
-      this.$router.push(this.$route.fullPath.replace('#', '?'));
-      this.authorized = true;
     }
   },
   mounted() {
@@ -42,18 +35,14 @@ export default {
 </script>
 
 <style scoped>
-.visualize_individual {
-  font-family: "Abel", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
+.parameter {
   display: flex;
   align-items: center;
   justify-content: left;
 }
 .param_name {
-  width: 150px;
-  font-size: 1.3rem;
+  width: 160px;
+  font-size: 1.2rem;
   margin: 0;
 }
 .bar {
@@ -81,7 +70,7 @@ export default {
 }
 .value {
   font-size: 1.0rem;
-  margin: 0 1rem;
+  margin: 0 0 0 1rem;
   opacity: 0.5;
 }
 </style>
