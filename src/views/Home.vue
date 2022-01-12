@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div class="home">
     <Login v-if="!authorized" :redirectURI="redirectURI"></Login>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style scoped>
-#home {
+.home {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;

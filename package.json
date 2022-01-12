@@ -11,6 +11,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "google-fonts-webpack-plugin": "^0.4.4",
+    "kmeansjs": "0.0.3",
     "three-css3drenderer": "^1.0.1",
     "three.js": "^0.77.1",
     "vue": "^2.6.11",
