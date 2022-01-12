@@ -1,19 +1,16 @@
 <template>
-  <div id="home">
-    <Title></Title>
+  <div class="home">
     <Login v-if="!authorized" :redirectURI="redirectURI"></Login>
   </div>
 </template>
 
 <script>
 import Login from "@/components/Login.vue";
-import Title from "@/components/Title.vue";
 
 export default {
   name: "Home",
   components: {
-    Login,
-    Title,
+    Login
   },
   data() {
     return {
@@ -26,7 +23,7 @@ export default {
 </script>
 
 <style scoped>
-#home {
+.home {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;

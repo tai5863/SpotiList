@@ -1,7 +1,7 @@
 <template>
-  <div id="get_tracks_information">
-    <div class="button_container">
-      <button @click="init" class="operator" id="operator_init">
+  <div class="get_tracks_information">
+    <div class="button_container visualize">
+      <button @click="visualize" class="operator visualize">
         曲の詳細、類似度を可視化します
       </button>
     </div>
@@ -12,7 +12,7 @@
 export default {
   name: "GetTracksInformation",
   props: {
-    routeParams: Object,
+    routeParams: Object
   },
   data() {
     return {
@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    async init() {
+    async visualize() {
       await this.getUserId();
       await this.getTotalNumber();
       await this.getTracks();
@@ -91,9 +91,9 @@ export default {
 
         let offset = 0;
 
-        if (this.total > this.favoriteTracksLimit) {
+        if (this.total !== 0) {
           let promises = [];
-          let loop_num = Math.floor(this.total / this.favoriteTracksLimit);
+          let loop_num = Math.floor(this.total / this.favoriteTracksLimit) + 1;
 
           for (let i = 0; i < loop_num; i++) {
             offset += this.favoriteTracksLimit;
@@ -125,42 +125,39 @@ export default {
     },
     getAudioFeatures() {
       return new Promise((resolve, reject) => {
-      // return new Promise(() => {
 
         // eslint-disable-next-line no-unused-vars
         let offset = 0;
         let splitFavorites = [];
 
-        if (this.total > this.featuresLimit) {
-          let promises = [];
-          let loop_num = Math.floor(this.total / this.featuresLimit);
+        let promises = [];
+        let loop_num = Math.floor(this.total / this.featuresLimit) + 1;
 
-          for (let i = 0; i < loop_num; i++) {
-            offset += this.featuresLimit;
-            splitFavorites = sliceByNumber(this.favorites, this.featuresLimit);
-            let endpoint_features =
-              "https://api.spotify.com/v1/audio-features?ids=" +
-              splitFavorites[i].map((item) => item.track.id);
-            promises.push(this.axios.get(endpoint_features, this.data));
-          }
-
-          this.axios
-            .all(promises)
-            .then((res) => {
-              res.forEach((element) => {
-                this.audioFeatures = this.audioFeatures.concat(element.data.audio_features);
-              });
-              this.$emit('get_audio_features', this.audioFeatures);
-              console.log("get audio features");
-              resolve("get audio features");
-            })
-            .catch((err) => {
-              console.error(err + ": audio features");
-              alert("エラーが発生しました");
-              window.location.href = "";
-              reject(err);
-            });
+        for (let i = 0; i < loop_num; i++) {
+          offset += this.featuresLimit;
+          splitFavorites = sliceByNumber(this.favorites, this.featuresLimit);
+          let endpoint_features =
+            "https://api.spotify.com/v1/audio-features?ids=" +
+            splitFavorites[i].map((item) => item.track.id);
+          promises.push(this.axios.get(endpoint_features, this.data));
         }
+
+        this.axios
+          .all(promises)
+          .then((res) => {
+            res.forEach((element) => {
+              this.audioFeatures = this.audioFeatures.concat(element.data.audio_features);
+            });
+            this.$emit('get_audio_features', this.audioFeatures);
+            console.log("get audio features");
+            resolve("get audio features");
+          })
+          .catch((err) => {
+            console.error(err + ": audio features");
+            alert("エラーが発生しました");
+            window.location.href = "";
+            reject(err);
+          });
       });
     },
   },
@@ -185,13 +182,13 @@ const sliceByNumber = (array, number) => {
     opacity: 1;
   }
 }
-.button_container {
-  text-align: right;
+.button_container > .visualize {
+  text-align: center;
   position: fixed;
-  bottom: 0;
   right: 5%;
+  bottom: 0;
 }
-button {
+.operator {
   display: inline-block;
   transition-duration: 0.6s;
   animation: show 0.6s both;
@@ -210,7 +207,7 @@ button {
   margin: 40px auto;
   width: 250px;
 }
-#operator_init:hover {
+.operator:hover {
   background-color: rgba(255, 255, 255, 0.7);
 }
 </style>
