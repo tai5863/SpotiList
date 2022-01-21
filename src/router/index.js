@@ -23,7 +23,8 @@ Vue.use(VueRouter)
   {
     path: '/playlist',
     name: 'Playlist',
-    component: Playlist
+    component: Playlist,
+    props: true
   }
 ]
 

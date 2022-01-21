@@ -1,7 +1,7 @@
 <template>
-  <div class="song">
-    <img :id="this.song.name + '_thumbnail'" :src="this.song.thumbnailUrl" alt="thumbnail" v-on:click="toggleDisplayParams" />
-    <div class="audio_features" :id="this.song.name">
+  <div class="song" :id="this.song.name">
+    <img :id="this.song.name + '_thumbnail'" :src="this.song.thumbnailUrl" alt="thumbnail" @click="toggleDisplayParams" />
+    <div class="audio_features" :id="this.song.name + '_features'" v-show="isDisplayed">
       <div class="title">
         <p class="song_name">{{ song.name }}</p>
         <p class="artist">{{ song.artist }}</p>
@@ -14,11 +14,6 @@
       <parameter :paramName="'Loudness'" :value="song.loudness" :min="-60" :max="0" />
       <parameter :paramName="'Speechiness'" :value="song.speechiness" :min="0" :max="1" />
       <parameter :paramName="'Valence'" :value="song.valence" :min="0" :max="1" />
-      <!-- <p class="param">duration_ms: {{ song.duration_ms }}</p> -->
-      <!-- <p class="param">key: {{ song.key }}</p> -->
-      <!-- <p class="param">mode: {{ song.mode }}</p> -->
-      <!-- <p class="param">tempo: {{ song.tempo }}</p> -->
-      <!-- <p class="param">time_signature: {{ song.time_signature }}</p> -->
     </div>
   </div>
 </template>
@@ -39,11 +34,15 @@ export default {
       isDisplayed: false
     }
   },
+  mounted() {
+    this.toggleDisplayParams();
+  },
   methods: {
     toggleDisplayParams() {
       this.isDisplayed = !this.isDisplayed;
-      let eAudioFeatures = document.getElementById(this.song.name);
+      let eAudioFeatures = document.getElementById(this.song.name + '_features');
       let eThumbnail = document.getElementById(this.song.name + '_thumbnail');
+      let eSong = document.getElementById(this.song.name);
 
       if (this.isDisplayed === true) {
         eAudioFeatures.style.transitionDuration = "1.0s, 0.5s";
@@ -52,6 +51,8 @@ export default {
         eAudioFeatures.classList.add('displayed_audio_features');
 
         eThumbnail.classList.add('displayed_img');
+
+        eSong.style.background = 'rgba(0, 0, 0, 0.5)';
       } else {
         eAudioFeatures.style.transitionDuration = "1.0s, 0.5s";
         eAudioFeatures.style.transitionTimingFunction = "ease-out";
@@ -59,6 +60,7 @@ export default {
         eAudioFeatures.classList.remove('displayed_audio_features');
         
         eThumbnail.classList.remove('displayed_img');
+        eSong.style.background = 'rgba(0, 0, 0, 0)';
       }
     }
   }
@@ -67,20 +69,21 @@ export default {
 
 <style scoped>
 .song {
-  padding: 1rem 1rem 1.8rem 1rem;
+  margin: 1rem 1rem 1.8rem 1rem;
   font-size: 1.3rem;
   text-align: left;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 0;
 }
 img {
   width: 230px;
   height: 230px;
   margin: 0 1rem;
   background: white;
-  opacity: 0.7;
+  opacity: 0.8;
   transition: all 1.0s;
 }
 img:hover {
@@ -116,8 +119,5 @@ img:hover {
   margin: 0 1rem;
   font-size: 1.5rem;
   opacity: 0.3;
-}
-.param {
-  margin: 0;
 }
 </style>

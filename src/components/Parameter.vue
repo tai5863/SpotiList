@@ -50,7 +50,7 @@ export default {
   color: white;
   padding: 0.5rem 0;
   background: white;
-  opacity: 0.8;
+  opacity: 1.0;
 }
 .part {
   animation: bar-animation 1 2s;
@@ -71,6 +71,6 @@ export default {
 .value {
   font-size: 1.0rem;
   margin: 0 0 0 1rem;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 </style>

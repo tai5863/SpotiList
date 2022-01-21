@@ -2,7 +2,7 @@
   <div id="login">
     <div class="button_container">
       <button @click="login" class="operator" id="operator_auth">
-        さあ、はじめましょう。
+        さあ、はじめましょう
       </button>
     </div>
   </div>
@@ -45,12 +45,6 @@ export default {
     transform: translate(0, 0);
     opacity: 1;
   }
-}
-.button_container {
-  text-align: right;
-  position: fixed;
-  bottom: 0;
-  right: 5%;
 }
 button {
   display: inline-block;
