@@ -20,7 +20,8 @@ export default {
   data() {
     return {
       authorized: false,
-      redirectURI: "https://spotilist-b5e14.web.app/",
+      // redirectURI: "https://spotilist-b5e14.web.app/",
+      redirectURI: "https://tai5863.github.io/SpotiList/",
       // redirectURI: "http://localhost:8080/",
     };
   },
