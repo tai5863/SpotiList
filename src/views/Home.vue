@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     <h1>SpotiList</h1>
     <p>SpotiListは、あなたのSpotifyのお気に入りの曲を分析し、類似した曲のプレイリストを作成するアプリです。</p>
     <Login v-if="!authorized" :redirectURI="redirectURI"></Login>
@@ -12,20 +12,33 @@ import Login from "@/components/Login.vue";
 export default {
   name: "Home",
   components: {
-    Login
+    Login,
+  },
+  props: {
+    routeParams: Object,
   },
   data() {
     return {
-      redirectURI: "http://localhost:8080/SpotiList/visualize", // 開発用
-      // redirectURI: 'https://tai5863.github.io/SpotiList/visualize', // 本番用
       authorized: false,
+      redirectURI: "https://spotilist-b5e14.web.app/",
+      // redirectURI: "http://localhost:8080/",
     };
   },
+  created() {
+    if (this.$route.hash) {
+      this.$router.push(this.$route.fullPath.replace("#", "?"));
+      this.authorized = true;
+      this.$router.push({
+        name: "Visualize",
+        params: { routeParams: this.$route.query }
+      });
+    }
+  }, 
 };
 </script>
 
 <style scoped>
-.home {
+#home {
   width: 100vw;
   height: 100vh;
   text-align: center;

@@ -11,14 +11,15 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home,
+    props: (route) => {
+      return { routeParams: route.query }
+    }
   },
   {
     path: '/visualize',
     name: 'Visualize',
     component: Visualize,
-    props: (route) => {
-      return { routeParams: route.query }
-    }
+    props: true
   },
   {
     path: '/playlist',
@@ -29,7 +30,7 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  mode: 'spa',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

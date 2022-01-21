@@ -76,9 +76,8 @@ export default {
     };
   },
   created() {
-    if (this.$route.hash) {
-      this.$router.push(this.$route.fullPath.replace("#", "?"));
-      this.authorized = true;
+    if (this.routeParams === undefined) {
+      this.$router.push("/");
     }
   },
   methods: {
