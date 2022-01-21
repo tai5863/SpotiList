@@ -10,7 +10,10 @@
       />
       <p>類似度の高い曲からプレイリストを作成しました！</p>
       <div class="button_container save">
-        <button @click="doAxios" class="operator save">
+        <!-- <button @click="doAxios" class="operator save">
+          プレイリストを保存
+        </button> -->
+        <button class="operator save">
           プレイリストを保存
         </button>
       </div>
