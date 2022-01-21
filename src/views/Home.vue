@@ -16,8 +16,8 @@ export default {
   },
   data() {
     return {
-      // redirectURI: "http://localhost:8080/SpotiList/visualize", // 開発用
-      redirectURI: 'https://tai5863.github.io/SpotiList/visualize', // 本番用
+      redirectURI: "http://localhost:8080/SpotiList/visualize", // 開発用
+      // redirectURI: 'https://tai5863.github.io/SpotiList/visualize', // 本番用
       authorized: false,
     };
   },

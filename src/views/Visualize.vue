@@ -33,11 +33,11 @@
       :colors="colors"
       @back="toggleVisualize"
     />
-    <!-- <div class="button_container playlist" v-if="!displayExplanation && isExistingAudioFeatures && !isVisualizing">
+    <div class="button_container playlist" v-if="!displayExplanation && isExistingAudioFeatures && !isVisualizing">
       <button @click="pushToPlaylist" class="operator playlist">
         プレイリストを作成
       </button>
-    </div> -->
+    </div>
   </div>
 </template>
 

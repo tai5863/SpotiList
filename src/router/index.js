@@ -29,7 +29,7 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'spa',
   base: process.env.BASE_URL,
   routes
 })
